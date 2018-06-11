@@ -1,0 +1,109 @@
+
+<!DOCTYPE html>
+
+<html>
+
+<head>
+
+	<meta charset="utf-8">
+  	
+  	<meta name="viewport" content="width=device-width, initial-scale=1">
+
+	<link rel="shortcut icon" type="image/x-icon" href="ludo.png" />
+
+	<link rel="stylesheet" type="text/css" href="style.css" />
+
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+
+	<title>Ludo | A game for two</title>
+
+</head>
+
+<body>
+		<!img src="logo.png" alt="logo" class="center">
+	<div id="board">
+	<div id="mainbox">
+		<div class="box top" id="startA"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box top"></div>
+		<div class="box left" id="endA"></div>
+		<div class="box left"></div>
+		<div class="box left"></div>
+		<div class="box left"></div>
+		<div class="box left"></div>
+		<div class="box left"></div>
+		<div class="box right"></div>
+		<div class="box right"></div>
+		<div class="box right"></div>
+		<div class="box right"></div>
+		<div class="box right"></div>
+		<div class="box right" id="endB"></div>
+		<div class="box bottom" ></div>
+		<div class="box bottom"></div>
+		<div class="box bottom"></div>
+		<div class="box bottom"></div>
+		<div class="box bottom"></div>
+		<div class="box bottom"></div>
+		<div class="box bottom"></div>
+		<div class="box bottom" id="startB"></div>
+
+		<div id="a" class="locker" onclick="release('a')">
+			<h2 style="color:#01fb19;"><font face="Comic Sans MS">Locker for A</font></h2>
+		</div>
+		
+		<div id="b" class="locker" onclick="release('b')">
+			<h2 style="color:#ff0000;"><font face="Comic Sans MS">Locker for B</font></h2>
+		</div>
+
+		<div id="center">
+			<img src="logo.png" alt="logo" class="center">
+			<ul>
+						
+						<font color="white" face="Comic Sans MS" size="4px">	<li>
+					<h2 id="turn"></h2>
+					</li></font>
+			</ul>
+				<button id="roll" onclick="rolldice()">Roll Die</button>
+				<font face="Comic Sans MS">
+				<ul><font color="white" face="Comic Sans MS" size="5px">
+				<li id="rolled"></li></font>
+				<li><h3> Enter dice value</h3><input type="number" min="1" max="6" id="dice"></li>
+			</ul>
+		</font>
+		</div>
+		</div>
+
+		<img src="A.png" id="tokenA1" class="tokens" onclick="moveToken('A1')">
+
+	<img src="A.png" id="tokenA2" class="tokens" onclick="moveToken('A2')">
+
+	<img src="B.png" id="tokenB1" class="tokens" onclick="moveToken('B1')">
+
+	<img src="B.png" id="tokenB2" class="tokens" onclick="moveToken('B2')">
+
+	</div>
+
+			<div id="tip1">
+		
+	</div>
+
+	<div id="tip2">
+		
+	</div>
+
+	<div id="win"></div>
+
+	<div id="resbg"></div>
+
+	<div id="result"></div>
+
+	<div id="playagain" onclick="history.go(0)"><br />PLAY AGAIN</div>
+
+	<script type="text/javascript" src="game.js"></script>
+</body>
+</html>
