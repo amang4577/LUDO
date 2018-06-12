@@ -1,12 +1,19 @@
 var tokenLockerA = 2, tokenLockerB = 2, tokenAout = 0, tokenBout = 0, boardA = "A1", boardB = "B1", pos = {A1: -1, A2: -1, B1: -1, B2: -1}, fin = true;
-  diceval = Number(Math.floor(Math.random()*6+1)), playerTurn = "A", releaseA = "A1", releaseB = "B1", err = false;
+  diceval = Number(Math.floor(Math.random()*6+1)), playerTurn = "A", releaseA = "A1", releaseB = "B1", err = false, moveA1max = 6, moveA2max = 6,
+   moveB1max = 6, moveB2max = 6;
 
 var lockerADisplay = document.getElementById("a").getElementsByTagName("h1")[0], lockerBDisplay = document.getElementById("b").getElementsByTagName("h1")[0],
-  playerTurnDisplay = document.getElementsByTagName("LI")[0], diceDisplay = document.getElementById("rolled"),
+  playerTurnDisplay = document.getElementsByTagName("LI")[0], diceDisplay = document.getElementById("rolled").getElementsByTagName("img")[0],
   diceInput = document.getElementById("dice"), resultDisplay = document.getElementById("result");
 
 var a1 = document.getElementById("tokenA1"), a2 = document.getElementById("tokenA2"), b1 = document.getElementById("tokenB1"),
   b2 = document.getElementById("tokenB2");
+
+function load(event) {
+
+  if(event.which == 13) rolldice();
+
+}
 
 function other(token) {
 
@@ -56,6 +63,14 @@ function finish() {
 
   fin = false;
 
+  if(pos["A1"] >= 22 && pos["A1"] <= 27) moveA1max = 27 - pos["A1"];
+
+  if(pos["A2"] >= 22 && pos["A2"] <= 27) moveA2max = 27 - pos["A2"];
+
+  if(pos["B1"] >= 8 && pos["B1"] <= 13) moveB1max = 13 - pos["B1"];
+
+  if(pos["B2"] >= 8 && pos["B2"] <= 13) moveB2max = 13 - pos["B2"];
+
   if(pos["A1"] == 27) {
     tokenAout += 1;
     boardA = "A2";
@@ -70,38 +85,39 @@ function finish() {
     boardA = "A1";
     pos["A2"] = 29;
     $("#tokenA2").fadeOut(500);
-    $("#tokenA2").animate({ top: '27vh', left: '-32vh'}, 1000);
+    $("#tokenA2").animate({ top: '27vh', left: '-32vh'}, 0);
     $("#tokenA2").fadeIn(500);
   }
 
   if(pos["B1"] == 13) {
     tokenBout += 1;
-    boardA = "B2";
+    boardB = "B2";
     pos["B1"] = 30;
     $("#tokenB1").fadeOut(500);
-    $("#tokenB1").animate({ top: '51vh', left: '99.75vh'}, 1000);
+    $("#tokenB1").animate({ top: '51vh', left: '99.75vh'}, 0);
     $("#tokenB1").fadeIn(500);
   }
 
   if(pos["B2"] == 13) {
     tokenBout += 1;
-    boardA = "B1";
+    boardB = "B1";
     pos["B2"] = 31;
     $("#tokenB2").fadeOut(500);
-    $("#tokenB2").animate({ top: '51vh', left: '109.75vh'}, 1000);
+    $("#tokenB2").animate({ top: '51vh', left: '109.75vh'}, 0);
     $("#tokenB2").fadeIn(500);
   }
 
   if(tokenAout == 2) {
     document.getElementById("result").innerHTML = "Player <br /><span>A</span><br /> Won!";
+    document.getElementById("result").getElementsByTagName("span")[0].style.color = "#cc0000";
     $("#result").fadeIn(1000);
     $("#resbg").fadeIn(800);
     $("#playagain").fadeIn(1000);
   }
 
-  if(tokenBout == 2) {
+  else if(tokenBout == 2) {
     document.getElementById("result").innerHTML = "Player <br /><span>B</span><br /> Won!";
-    document.getElementById("span").color = "#0000cc;"
+    document.getElementById("result").getElementsByTagName("span")[0].style.color = "#0000cc";
     $("#result").fadeIn(1000);
     $("#resbg").fadeIn(800);
     $("#playagain").fadeIn(1000);
@@ -187,7 +203,7 @@ function cut(token) {
 
       releaseA = "A2";
 
-      $("#tokenA2").animate({ top: '11vh', left: '-32vh'}, 1000, function() { finish(); });
+      $("#tokenA2").animate({ top: '11vh', left: '-22vh'}, 1000, function() { finish(); });
 
     } break;
 
@@ -229,7 +245,7 @@ function cut(token) {
 
       releaseB = "B2";
 
-      $("#tokenB2").animate({ top: '72vh', left: '109.75vh'}, 1000, function() { finish(); });
+      $("#tokenB2").animate({ top: '72vh', left: '99.75vh'}, 1000, function() { finish(); });
 
     }
   }
@@ -243,17 +259,17 @@ function doublecheck(player, token) {
 
       case "A": {
 
-        a1.src = '2A.png';
+        a1.src = './Images/2A.png';
 
-        a2.src = 'A2.png';
+        a2.src = './Images/A2.png';
 
       } break;
 
       case "B": {
 
-        b1.src = '2B.png';
+        b1.src = './Images/2B.png';
 
-        b2.src = 'B2.png';
+        b2.src = './Images/B2.png';
 
       }
 
@@ -303,7 +319,7 @@ function releaseToken(player, token) {
       
       if(pos[boardA] == 0) {
 
-        $("#token"+token).animate({top: '-=7.75vh', left: '+=25.25vh'}, 1000, function() { pos[token] = 0; a1.src = '2A.png'; a2.src = 'A2.png'; finish(); });
+        $("#token"+token).animate({top: '-=7.75vh', left: '+=25.25vh'}, 1000, function() { pos[token] = 0; a1.src = './Images/2A.png'; a2.src = './Images/A2.png'; finish(); });
 
       }
 
@@ -311,7 +327,7 @@ function releaseToken(player, token) {
 
       else if(pos["B2"] == 0 && pos["B1"] != 0) { pos[token] = 0; cut("B2"); }
 
-      else if(pos["B1"] == 0 && pos["B2"] == 0) { pos[token] = 0; b1.src = 'B.png'; cut("bothB"); }
+      else if(pos["B1"] == 0 && pos["B2"] == 0) { pos[token] = 0; b1.src = './Images/B.png'; cut("bothB"); }
 
       else {
 
@@ -339,7 +355,7 @@ function releaseToken(player, token) {
       
       if(pos[boardB] == 14) {
 
-        $("#token"+token).animate({top: '+=2.75vh', left: '-=25.25vh'}, 1000, function() { pos[token] = 14; b1.src = '2B.png'; b2.src = 'B2.png'; finish(); });
+        $("#token"+token).animate({top: '+=2.75vh', left: '-=25.25vh'}, 1000, function() { pos[token] = 14; b1.src = './Images/2B.png'; b2.src = './Images/B2.png'; finish(); });
 
       }
 
@@ -347,7 +363,7 @@ function releaseToken(player, token) {
 
       else if(pos["A2"] == 14 && pos["A1"] != 14) { pos[token] = 14; cut("A2"); }
 
-      else if(pos["A1"] == 14 && pos["A2"] == 14) { pos[token] = 14; a1.src = 'A.png'; cut("bothA"); }
+      else if(pos["A1"] == 14 && pos["A2"] == 14) { pos[token] = 14; a1.src = './Images/A.png'; cut("bothA"); }
 
       else {
 
@@ -385,9 +401,11 @@ function moveToken(token) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval > 4) time = 250 * diceval;
+
+        else if(diceval == 1) time1 = 500;
 
         $("#token" + token).animate({left: '+='+moveby}, time, function() { pos[token] = newpos; doublecheck(player,token);});
 
@@ -397,11 +415,11 @@ function moveToken(token) {
 
         var moveby1 = (7-oldpos)*10.2 + 'vh', moveby2 = (newpos - 7)*10.2 + 'vh';
 
-        var time1 = 500 * (7-oldpos), time2 = 500 * (newpos-7);
+        var time1 = 400 * (7-oldpos), time2 = 400 * (newpos-7);
 
-        if(7-oldpos >= 4) time1 /= 2;
+        if(7-oldpos > 4) time1 = 250 * diceval; else if(diceval == 1) time1 = 500;
 
-        if(newpos-7 >= 4) time2 /= 2;
+        if(newpos-7 > 4) time2 = 250 * diceval; else if(diceval == 1) time2 = 500;
 
         $("#token" + token).animate({left: '+='+moveby1}, time1);
 
@@ -417,9 +435,11 @@ function moveToken(token) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval > 4) time = 250 * diceval;
+
+        else if(diceval == 1) time = 500;
 
         $("#token" + token).animate({top: '+='+moveby}, time, function() { pos[token] = newpos; doublecheck(player,token); });
 
@@ -429,11 +449,11 @@ function moveToken(token) {
 
         var moveby1 = (14-oldpos)*10.2 + 'vh', moveby2 = (newpos - 14)*10.2 + 'vh';
 
-        var time1 = 500 * (14-oldpos), time2 = 500 * (newpos-14);
+        var time1 = 400 * (14-oldpos), time2 = 400 * (newpos-14);
 
-        if(14-oldpos >= 4) time1 /= 2;
+        if(14-oldpos > 4) time1 = 250 * diceval; else if(diceval == 1) time1 = 500;
 
-        if(newpos-14 >= 4) time2 /= 2;
+        if(newpos-14 > 4) time2 = 250 * diceval; else if(diceval == 1) time2 = 500;
 
         $("#token" + token).animate({top: '+='+moveby1}, time1);
 
@@ -445,13 +465,15 @@ function moveToken(token) {
 
     else if(oldpos >= 7 && oldpos <= 13 && player == "B") {
 
-      if(newpos <= 14) {
+      if(newpos <= 13) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval >= 4) time = 250 * diceval
+
+        else if(diceval == 1) time = 500;
 
         $("#token" + token).animate({top: '+='+moveby}, time, function() { pos[token] = newpos; doublecheck(player,token); });
 
@@ -475,9 +497,11 @@ function moveToken(token) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval > 4) time = 250 * diceval;
+
+        else if(diceval == 1) time = 500;
 
         $("#token" + token).animate({left: '-='+moveby}, time, function() { pos[token] = newpos; doublecheck(player,token); });
 
@@ -487,11 +511,11 @@ function moveToken(token) {
 
         var moveby1 = (21-oldpos)*10.2 + 'vh', moveby2 = (newpos - 21)*10.2 + 'vh';
 
-        var time1 = 500 * (21-oldpos), time2 = 500 * (newpos-21);
+        var time1 = 400 * (21-oldpos), time2 = 400 * (newpos-21);
 
-        if(21-oldpos >= 4) time1 /= 2;
+        if(21-oldpos > 4) time1 = 250 * diceval; else if(diceval == 1) time1 = 500;
 
-        if(newpos-21 >= 4) time2 /= 2;
+        if(newpos-21 > 4) time2 = 250 * diceval; else if(diceval == 1) time2 = 500;
 
         $("#token" + token).animate({left: '-='+moveby1}, time1);
 
@@ -507,9 +531,11 @@ function moveToken(token) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval >= 4) time = 250 * diceval;
+
+        else if(diceval == 1) time = 500;
 
         if(newpos > 27) newpos -= 28;
 
@@ -521,11 +547,11 @@ function moveToken(token) {
 
         var moveby1 = (28-oldpos)*10.2 + 'vh', moveby2 = (newpos - 28)*10.2 + 'vh';
 
-        var time1 = 500 * (28-oldpos), time2 = 500 * (newpos-28);
+        var time1 = 400 * (28-oldpos), time2 = 400 * (newpos-28);
 
-        if(28-oldpos >= 4) time1 /= 2;
+        if(28-oldpos > 4) time1 = 250 * diceval; else if(diceval == 1) time1 = 500;
 
-        if(newpos-28 >= 4) time2 /= 2;
+        if(newpos-28 >= 4) time2 = 250 * diceval; else if(diceval == 1) time2 = 500;
 
         if(newpos > 27) newpos -= 28;
 
@@ -543,9 +569,11 @@ function moveToken(token) {
 
         var moveby = diceval*10.2 + 'vh';
 
-        var time = 500 * diceval;
+        var time = 400 * diceval;
 
-        if(diceval >= 4) time /= 2;
+        if(diceval >= 4) time = 250 * diceval;
+
+        else if(diceval == 1) time = 500;
 
         $("#token" + token).animate({top: '-='+moveby}, time, function() { pos[token] = newpos; doublecheck(player,token); });
 
@@ -586,11 +614,29 @@ function rolldice() {
 
   else {
 
-    diceval = diceInput.value;
+    diceval = Number(diceInput.value);
 
   }
 
-  diceDisplay.innerHTML = diceval;
+  if(diceval>6 || diceval < 1) { alert("Enter a number between 1 and 6"); finish(); }
+
+  else {
+
+  switch(diceval) {
+
+    case 1: diceDisplay.src="./Images/1.jpg"; break;
+
+    case 2: diceDisplay.src="./Images/2.jpg"; break;
+
+    case 3: diceDisplay.src="./Images/3.jpg"; break;
+
+    case 4: diceDisplay.src="./Images/4.jpg"; break;
+
+    case 5: diceDisplay.src="./Images/5.jpg"; break;
+
+    case 6: diceDisplay.src="./Images/6.jpg"; break;
+
+  }
 
   switch(playerTurn) {
 
@@ -614,7 +660,45 @@ function rolldice() {
             }
           }
 
-          else if(tokenLockerA == 1 && tokenAout == 0) {
+          else if(tokenLockerA == 1 && tokenAout == 0 && pos["A1"] == -1 && moveA2max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "A";
+
+              releaseToken("A", "A1");
+
+            }
+
+            else {
+
+              playerTurn = "B";
+
+              finish();
+              
+            }
+          }
+
+          else if(tokenLockerA == 1 && tokenAout == 0 && pos["A2"] == -1 && moveA1max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "A";
+
+              releaseToken("A", "A2");
+
+            }
+
+            else {
+
+              playerTurn = "B";
+
+              finish();
+              
+            }
+          }
+
+          else if(tokenLockerA == 1 && tokenAout == 0 && (moveA1max >= diceval || moveA2max >= diceval)) {
 
             if(diceval == 6) {
 
@@ -641,7 +725,7 @@ function rolldice() {
             }
           }
 
-          else if(tokenLockerA == 0 && tokenAout == 0) {
+          else if(tokenLockerA == 0 && tokenAout == 0 && moveA1max >= diceval && moveA2max >= diceval) {
 
             if(diceval == 6) {
 
@@ -657,9 +741,9 @@ function rolldice() {
 
               document.getElementById("tip1").style.display="none";
 
-              a1.src = 'A.png';
+              a1.src = './Images/A.png';
 
-              a2.src = 'A.png';
+              a2.src = './Images/A.png';
 
               moveToken("A1");
 
@@ -679,6 +763,41 @@ function rolldice() {
 
           }
 
+          else if(tokenLockerA == 0 && tokenAout == 0 && moveA1max >= diceval && moveA2max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "A";
+
+            }
+
+            else playerTurn = "B";
+
+            moveToken("A1");
+
+          }
+
+          else if(tokenLockerA == 0 && tokenAout == 0 && moveA1max < diceval && moveA2max >= diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "A";
+
+            }
+
+            else playerTurn = "B";
+
+            moveToken("A2");
+
+          }
+
+          else if(tokenLockerA == 0 && tokenAout == 0 && moveA1max < diceval && moveA2max < diceval) {
+
+            playerTurn = "B";
+
+            finish();
+
+          }
           
           else if(tokenLockerA == 0 && tokenAout == 1) {
 
@@ -737,7 +856,45 @@ function rolldice() {
             }
           }
 
-          else if(tokenLockerB == 1 && tokenBout == 0) {
+          else if(tokenLockerB == 1 && tokenBout == 0 && pos["B1"] == -1 && moveB2max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "B";
+
+              releaseToken("B", "B1");
+
+            }
+
+            else {
+
+              playerTurn = "A";
+
+              finish();
+              
+            }
+          }
+
+          else if(tokenLockerB == 1 && tokenBout == 0 && pos["B2"] == -1 && moveB1max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "B";
+
+              releaseToken("B", "B2");
+
+            }
+
+            else {
+
+              playerTurn = "A";
+
+              finish();
+              
+            }
+          }
+
+          else if(tokenLockerB == 1 && tokenBout == 0 && (moveB1max >= diceval || moveB2max >= diceval)) {
 
             if(diceval == 6) {
 
@@ -764,7 +921,7 @@ function rolldice() {
             }
           }
 
-          else if(tokenLockerB == 0 && tokenBout == 0) {
+          else if(tokenLockerB == 0 && tokenBout == 0 && moveB1max >= diceval && moveB2max >= diceval) {
 
             if(diceval == 6) {
 
@@ -780,9 +937,9 @@ function rolldice() {
 
               document.getElementById("tip1").style.display="none";
 
-              b1.src = 'B.png';
+              b1.src = './Images/B.png';
 
-              b2.src = 'B.png';
+              b2.src = './Images/B.png';
 
               moveToken("B1");
 
@@ -799,6 +956,42 @@ function rolldice() {
               document.getElementById("tokenB2").style.cursor="pointer";
 
             }
+
+          }
+
+          else if(tokenLockerB == 0 && tokenBout == 0 && moveB1max >= diceval && moveB2max < diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "B";
+
+            }
+
+            else playerTurn = "A";
+
+            moveToken("B1");
+
+          }
+
+          else if(tokenLockerB == 0 && tokenBout == 0 && moveB1max < diceval && moveB2max >= diceval) {
+
+            if(diceval == 6) {
+
+              playerTurn = "B";
+
+            }
+
+            else playerTurn = "A";
+
+            moveToken("B2");
+
+          }
+
+          else if(tokenLockerB == 0 && tokenBout == 0 && moveB1max < diceval && moveB2max < diceval) {
+
+            playerTurn = "A";
+
+            finish();
 
           }
 
@@ -838,6 +1031,51 @@ function rolldice() {
           }
 
         }
+    }
   }
 
+}
+
+function playAgain() {
+
+  document.getElementById("result").innerHTML = "Player <br /><span>A</span><br /> Won!";
+  document.getElementById("result").getElementsByTagName("span")[0].style.color = "#cc0000";
+  $("#result").fadeOut(800);
+  $("#resbg").fadeOut(1000);
+  $("#playagain").fadeOut(800);
+
+  tokenLockerA = 2, tokenLockerB = 2, tokenAout = 0, tokenBout = 0, boardA = "A1", boardB = "B1", pos = {A1: -1, A2: -1, B1: -1, B2: -1}, fin = true;
+  diceval = Number(Math.floor(Math.random()*6+1)), playerTurn = "A", releaseA = "A1", releaseB = "B1", err = false, moveA1max = 6, moveA2max = 6,
+  moveB1max = 6, moveB2max = 6;
+
+  $("#tokenA1").animate({ top: '11vh', left: '-22vh'}, 1000);
+  $("#tokenA2").animate({ top: '11vh', left: '-32vh'}, 1000);
+  $("#tokenB1").animate({ top: '72vh', left: '99.75vh'}, 1000);
+  $("#tokenB2").animate({ top: '72vh', left: '109.75vh'}, 1000);
+  diceDisplay.src = "";
+  diceInput.value = "";
+  playerTurnDisplay.innerHTML = "TURN of Player A";
+
+}
+
+function resetenter() {
+  var text = document.getElementById("reset");
+  var x = document.getElementById("resetimg2");
+  x.style.cursor= 'pointer';
+  x.style.transform= 'rotate(-360deg)';
+  x.style.transitionDuration= '0.7s';
+  x.style.transitionTimingFunction= 'easeInOut';
+  text.style.right= "5vh";
+  text.style.transition= "right 0.7s";
+}
+
+function resetleave() {
+  var text = document.getElementById("reset");
+  var x = document.getElementById("resetimg2");
+  x.style.cursor= 'default';
+  x.style.transform= 'rotate(+0deg)';
+  x.style.transitionDuration= '0.7s';
+  x.style.transitionTimingFunction= 'easeInOut';
+  text.style.right= "-2vh";
+  text.style.transition= "right 0.7s";
 }
